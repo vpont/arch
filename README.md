@@ -5,7 +5,6 @@
 * https://wiki.archlinux.org/index.php/Dell_XPS_13_(9370)
 * https://wiki.archlinux.org/index.php/Silent_boot
 * https://securityhacklabs.net/forum/distribuciones-gnulinux/archlinux/2018-06-14/systemd-networkd-un-dhcp-mas-rapido-que-dhcpcd
-* https://averagelinuxuser.com/which-aur-helper-yay/
 
 # Installation procedure (encrypted LVM on EFI):
   1. In Archiso boot menu, hit `e` button and add following to the kernel line: `video=1920x1080`
@@ -64,7 +63,7 @@
         * `localectl set-locale es_ES.UTF-8`
         * `localectl set-keymap --no-convert es`
         * `echo "KEYMAP=es" > /etc/vconsole.conf`
-  1. Edit `/etc/hostname` and add:
+  1. Edit `/etc/hosts` and add:
         ```
         127.0.0.1   localhost
         ::1         localhost
@@ -120,29 +119,33 @@
         * `systemctl start lightdm`
   1. Install software:
         * `pacman -S git gedit hplip duplicity rsync firefox firefox-i18n-es-es thunderbird thunderbird-i18n-es-es`
-  1. Install yay:
+  1. Install paru:
         * `cd /tmp`
-        * `git clone https://aur.archlinux.org/yay.git`
-        * `cd yay`
+        * `git clone https://aur.archlinux.org/paru-bin.git`
+        * `cd paru-bin`
         * `makepkg -si`
-  1. Yay optimizations:
-        * Edit `/etc/makepkg.conf`, locate `CFLAGS` and remove any `-march` and `-mtune` flags, then add `-march=native`
+  1. paru optimizations:
+        * Create `~/.makepkg.conf` and add:
+            ```
+            CFLAGS="-march=native -O2 -pipe -fno-plt"
+            CXXFLAGS="${CFLAGS}"
+            ```
   1. Install themes, cursors and icons:
-        * `yay -S materia-theme-git`
-        * `yay -S papirus-icon-theme-git`
-        * `yay -S breeze-default-cursor-theme`
+        * `paru materia-theme-git`
+        * `paru papirus-icon-theme-git`
+        * `paru breeze-default-cursor-theme`
   1. Install zsh themes and fonts:
-        * `yay -S oh-my-zsh-git`
-        * `yay -S powerline-fonts-git`
-        * `yay -S oh-my-zsh-powerline-theme-git`
-        * `yay -S ttf-google-fonts-git`
-        * `yay -S nerd-fonts-terminus`
+        * `paru oh-my-zsh-git`
+        * `paru powerline-fonts-git`
+        * `paru oh-my-zsh-powerline-theme-git`
+        * `paru ttf-google-fonts-git`
+        * `paru nerd-fonts-terminus`
   1. Install other packages:
-        * `yay -S google-chrome`
-        * `yay -S franz`
+        * `paru google-chrome`
+        * `paru franz`
   1. Install Lightdm Slick Greeter:
-        * `yay -S lightdm-slick-greeter`
-        * `yay -S lightdm-settings`
+        * `paru lightdm-slick-greeter`
+        * `paru lightdm-settings`
         * Edit `/etc/lightdm/lightdm.conf` and add `greeter-session=lightdm-slick-greeter` in the `[Seat:*]` section
         * Create `/etc/lightdm/slick-greeter.conf` and add:
             ```
@@ -153,17 +156,17 @@
             show-a11y=false
             ```
   1. Install Plymouth (not recommended):
-        * `yay -S plymouth-git`
+        * `paru plymouth-git`
         * Edit `/etc/mkinitcpio.conf` and add `plymouth plymouth-encrypt` after `base` and `udev`, and remove `encrypt`
         * `mkinitcpio -p linux`
         * Edit `/boot/loader/entries/arch.conf` and add `splash` after `quiet` in `options`
         * `bootctl --path=/boot update`
-        * `yay -S plymouth-theme-arch-charge`
+        * `paru plymouth-theme-arch-charge`
         * `plymouth-set-default-theme -R arch-charge`
   1. Install budgie applets:
-        * `yay -S indicator-sysmonitor-budgie-git`
+        * `paru indicator-sysmonitor-budgie-git`
         * Add new sensor `coretemp` which executes: `echo "$(expr $(cat /sys/devices/platform/coretemp.0/hwmon/hwmon4/temp1_input) / 1000)ºC"`
   1. Install i3-gaps:
         * `pacman -S xorg xorg-xinit xorg-server lightdm lightdm-gtk-greeter i3-gaps dunst feh`
         * `setxkbmap es`
-        * `yay -S polybar-git`
+        * `paru polybar-git`
